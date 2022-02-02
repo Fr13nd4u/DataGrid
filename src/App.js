@@ -1,25 +1,21 @@
-import logo from './logo.svg';
+import React from 'react';
+import '@progress/kendo-theme-default/dist/all.css';
 import './App.css';
+import { Grid, GridColumn  } from "@progress/kendo-react-grid";
+import products from "./products.json";
 
-function App() {
+const App = () =>  {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Grid
+      data={products}
+    >
+      <GridColumn field="ProductID" title="ID" width="40px" />
+      <GridColumn field="ProductName" title="Name" width="250px" />
+      <GridColumn field="Category.CategoryName" title="CategoryName" />
+      <GridColumn field="UnitPrice" title="Price" />
+      <GridColumn field="UnitsInStock" title="In stock" />
+    </Grid>
+  )
 }
 
 export default App;
