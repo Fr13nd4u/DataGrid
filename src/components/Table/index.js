@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { filterBy,orderBy } from "@progress/kendo-data-query";
+import { useNavigate } from "react-router-dom";
 
 import {users} from "../../data/users"
 import AddUser from '../AddUser';
@@ -30,7 +31,9 @@ const initialDataState = {
 
 const BooleanCell = (props) => {
   return (
-    <td>{props.dataItem[props.field] ? 'Yes' : 'No'}</td>
+    <td className={props.dataItem[props.field] ? 'text-yes' : 'text-no'}>
+      {props.dataItem[props.field] ? 'Yes' : 'No'}
+    </td>
   )
 }
 
@@ -38,13 +41,14 @@ const Table = () => {
   const [filter, setFilter] = useState(initialFilter);
   const [page, setPage] = useState(initialDataState);
   const [sort, setSort] = useState(initialSort);
+  const navigate = useNavigate();
 
   const pageChange = (event) => {
     setPage(event.page);
   };
 
   return (
-    <div className='container'>
+    <div className="container">
       <AddUser />
       <Grid
         data={filterBy(orderBy(users.slice(page.skip, page.take + page.skip), sort),filter)}
@@ -59,18 +63,19 @@ const Table = () => {
         onSortChange={(e) => setSort(e.sort)}
         onFilterChange={(e) => setFilter(e.filter)}
         onPageChange={pageChange}
-        onRowClick={(e) => console.log(e.dataItem.UserID)}
+        onRowClick={(e) => navigate(`/user/${e.dataItem.UserID}`)}
         >
-        <Column field="UserID" title="ID" filterable={false} width="50px" />
+        <Column field="UserID" title="ID" filterable={false} width="100px" />
         <Column field="UserName" title="User Name" width="300px" />
-        <Column field="FullName" title="Full Name" />
+        <Column field="FullName" title="Full Name" filterable={false} />
         <Column
           field="LastLogin"
           title="Last Login"
           filter="date"
           format="{0:D}"
+          filterable={false}
           />
-        <Column field="Enabled" filter="boolean" cell={BooleanCell} width="100px"/>
+        <Column field="Enabled" filter="boolean" filterable={false} cell={BooleanCell} width="100px"/>
       </Grid>
     </div>
   );

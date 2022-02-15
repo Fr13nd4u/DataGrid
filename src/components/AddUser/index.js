@@ -18,7 +18,7 @@ const AddUser = () => {
         }}
         onClick={toggleDialog}
       >
-        Add User
+        New User
       </button>
       {visible && (
         <Dialog title={"Please confirm"} onClose={toggleDialog}>

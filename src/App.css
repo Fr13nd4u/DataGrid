@@ -17,3 +17,11 @@ h2 {
   max-width: 1380px;
   margin: 0 auto;
 }
+
+.text-yes {
+  background: rgb(55, 180, 0, 0.32);
+}
+
+.text-no {
+  background: rgb(243, 23, 0, 0.32);
+}
