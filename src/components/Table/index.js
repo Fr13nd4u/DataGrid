@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { filterBy,orderBy } from "@progress/kendo-data-query";
 import { useNavigate } from "react-router-dom";
+import { connect } from 'react-redux';
 
-import {users} from "../../data/users"
 import AddUser from '../AddUser';
+import { useGetFetch } from '../../hooks/useUserFetch';
 
 const initialFilter = {
   logic: "and",
@@ -38,10 +39,17 @@ const BooleanCell = (props) => {
 }
 
 const Table = () => {
+  const { isFetching, data, error} = useGetFetch();
   const [filter, setFilter] = useState(initialFilter);
   const [page, setPage] = useState(initialDataState);
   const [sort, setSort] = useState(initialSort);
   const navigate = useNavigate();
+
+  console.log(isFetching);
+  // console.log(error);
+  console.log(data);
+
+  // const {users} = data
 
   const pageChange = (event) => {
     setPage(event.page);
@@ -51,11 +59,11 @@ const Table = () => {
     <div className="container">
       <AddUser />
       <Grid
-        data={filterBy(orderBy(users.slice(page.skip, page.take + page.skip), sort),filter)}
+        data={filterBy(orderBy(data.users.slice(page.skip, page.take + page.skip), sort),filter)}
         filterable={true}
         pageable={true}
         sortable={true}
-        total={users.length}
+        total={data.users.length}
         skip={page.skip}
         take={page.take}
         filter={filter}
@@ -76,9 +84,14 @@ const Table = () => {
           filterable={false}
           />
         <Column field="Enabled" filter="boolean" filterable={false} cell={BooleanCell} width="100px"/>
-      </Grid>
+      </Grid> 
     </div>
   );
 };
 
-export default Table;
+export default connect(
+  state => ({
+    data: state
+  }),
+  dispatch => ({})
+)(Table);

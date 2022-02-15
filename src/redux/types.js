@@ -5,6 +5,5 @@ export const types = Object.freeze({
   USER_FILL: 'USER_FILL',
   USER_SET_FETCHING_ERROR: 'USER_SET_FETCHING_ERROR',
 
-  // Async
   USER_FETC_ASYNC: 'USER_FETC_ASYNC',
 });

@@ -1,18 +1,38 @@
 import { types } from './types';
-import { users } from '../data/users';
 
 const initialState = {
-  data: {users}
+  data: null,
+  isFetching: false,
+  error: null,
 };
 
-export const userReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case types.USER_FILL: {
+export const userReducer = (state = initialState, {type, payload}) => {
+  switch (type) {
+    case types.USER_START_FETCHING: 
       return {
         ...state,
-        data: action.payload,
-      } 
-    }
+        isFetching: true,
+      };
+    
+    case types.USER_STOP_FETCHING: 
+      return {
+        ...state,
+        isFetching: false,
+      };
+
+    case types.USER_SET_FETCHING_ERROR:
+      return {
+        ...state,
+        error: payload,
+        data: null,
+      };
+
+    case types.USER_FILL:
+      return {
+        ...state,
+        data: payload,
+        error: null,
+      };
   
     default:
       return state
