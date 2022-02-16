@@ -37,6 +37,7 @@ export const userActions = Object.freeze({
       dispatch(userActions.fill(res.data));
     })
     .catch(error => {
+      console.log(error);
       dispatch(userActions.setFetchingError(error.response))
     })
 

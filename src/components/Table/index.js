@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { filterBy,orderBy } from "@progress/kendo-data-query";
 import { useNavigate } from "react-router-dom";
-import { connect } from 'react-redux';
 
 import AddUser from '../AddUser';
 import { useGetFetch } from '../../hooks/useUserFetch';
@@ -38,18 +37,32 @@ const BooleanCell = (props) => {
   )
 }
 
+
 const Table = () => {
   const { isFetching, data, error} = useGetFetch();
   const [filter, setFilter] = useState(initialFilter);
   const [page, setPage] = useState(initialDataState);
   const [sort, setSort] = useState(initialSort);
   const navigate = useNavigate();
+  const [users, setUsers] = useState(null)
 
-  console.log(isFetching);
-  // console.log(error);
-  console.log(data);
+  useEffect(() => {
+    setUsers(data)
+  }, [data]);
 
-  // const {users} = data
+  if (error) {
+    return <div className="container"><p>Something went wrong!</p></div>;
+  }
+  
+  if (!users || isFetching) {
+    return <div className="container"><p>Loading profile...</p></div>;
+  }
+
+  const formatUsers = users.users.map(current => {
+    let newUsers = Object.assign({}, current);
+    newUsers.formatLastLogin = new Date(current.LastLogin)
+    return newUsers
+  })
 
   const pageChange = (event) => {
     setPage(event.page);
@@ -59,11 +72,11 @@ const Table = () => {
     <div className="container">
       <AddUser />
       <Grid
-        data={filterBy(orderBy(data.users.slice(page.skip, page.take + page.skip), sort),filter)}
+        data={filterBy(orderBy(formatUsers.slice(page.skip, page.take + page.skip), sort),filter)}
         filterable={true}
         pageable={true}
         sortable={true}
-        total={data.users.length}
+        total={formatUsers.length}
         skip={page.skip}
         take={page.take}
         filter={filter}
@@ -77,7 +90,7 @@ const Table = () => {
         <Column field="UserName" title="User Name" width="300px" />
         <Column field="FullName" title="Full Name" filterable={false} />
         <Column
-          field="LastLogin"
+          field="formatLastLogin"
           title="Last Login"
           filter="date"
           format="{0:D}"
@@ -89,9 +102,4 @@ const Table = () => {
   );
 };
 
-export default connect(
-  state => ({
-    data: state
-  }),
-  dispatch => ({})
-)(Table);
+export default Table;

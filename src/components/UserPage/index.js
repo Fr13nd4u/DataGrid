@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
-import {users} from "../../data/users"
 import EditForm from "./EditForm";
+import { useGetFetch } from '../../hooks/useUserFetch';
 
 const EditCommandCell = (props) => {
   return (
     <td>
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-        onClick={() => props.enterEdit(props.dataItem)}
+        onClick={() => {props.enterEdit(props.dataItem)}}
       >
         Edit
       </button>
@@ -19,10 +19,18 @@ const EditCommandCell = (props) => {
 };
 
 const UserPage = () => {
+  const { data } = useGetFetch();
   const params = useParams();
-  const user = [users.find( item => item.UserID == params.id)] // eslint-disable-line 
-  const [data, setData] = useState(user);
+  const navigate = useNavigate();
+  const user = [data.users.find(item => item.UserID == params.id)] // eslint-disable-line 
 
+  const formatUser = user.map(current => {
+    let newUsers = Object.assign({}, current);
+    newUsers.formatLastLogin = new Date(current.LastLogin)
+    return newUsers
+  })
+
+  const [dataItem, setDataItem] = useState(formatUser);
   const [openForm, setOpenForm] = useState(false);
   const [editItem, setEditItem] = useState({
     UserID: 1,
@@ -34,14 +42,14 @@ const UserPage = () => {
   };
 
   const handleSubmit = (event) => {
-    let newData = data.map((item) => {
+    let newData = dataItem.map((item) => {
       if (event.UserID === item.UserID) {
         item = { ...event };
       }
 
       return item;
     });
-    setData(newData);
+    setDataItem(newData);
     setOpenForm(false);
   };
 
@@ -64,14 +72,14 @@ const UserPage = () => {
   return (
     <div className="container">
       <Grid
-        data={data} 
+        data={dataItem} 
         editField="inEdit"
       >
         <Column field="UserID" title="ID" width="100px" editable={false} />
         <Column field="UserName" title="User Name" width="300px" />
         <Column field="FullName" title="Full Name" />
         <Column
-          field="LastLogin"
+          field="formatLastLogin"
           title="Last Login"
           format="{0:D}"
           />
