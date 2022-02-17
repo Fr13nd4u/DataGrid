@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import EditForm from "./EditForm";
 import { useGetFetch } from '../../hooks/useUserFetch';
@@ -21,10 +21,16 @@ const EditCommandCell = (props) => {
 const UserPage = () => {
   const { data } = useGetFetch();
   const params = useParams();
-  const navigate = useNavigate();
-  const user = [data.users.find(item => item.UserID == params.id)] // eslint-disable-line 
+  const [users, setUsers] = useState(null);
 
-  const formatUser = user.map(current => {
+  useEffect(() => {
+    setUsers(data)
+    setDataItem(formatUser)
+  }, [data, users]); // eslint-disable-line 
+  
+  const userItem = [users?.users.find(item => item.UserID == params.id)] // eslint-disable-line 
+  
+  const formatUser = users && userItem.map(current => {
     let newUsers = Object.assign({}, current);
     newUsers.formatLastLogin = new Date(current.LastLogin)
     return newUsers
@@ -35,7 +41,7 @@ const UserPage = () => {
   const [editItem, setEditItem] = useState({
     UserID: 1,
   });
-
+  
   const enterEdit = (item) => {
     setOpenForm(true);
     setEditItem(item);
@@ -71,25 +77,29 @@ const UserPage = () => {
 
   return (
     <div className="container">
-      <Grid
-        data={dataItem} 
-        editField="inEdit"
-      >
-        <Column field="UserID" title="ID" width="100px" editable={false} />
-        <Column field="UserName" title="User Name" width="300px" />
-        <Column field="FullName" title="Full Name" />
-        <Column
-          field="formatLastLogin"
-          title="Last Login"
-          format="{0:D}"
+      { !users ? 
+        <p>Loading profile...</p>
+        :
+        <Grid
+          data={dataItem} 
+          editField="inEdit"
+        >
+          <Column field="UserID" title="ID" width="100px" editable={false} />
+          <Column field="UserName" title="User Name" width="300px" />
+          <Column field="FullName" title="Full Name" />
+          <Column
+            field="formatLastLogin"
+            title="Last Login"
+            format="{0:D}"
+            />
+          <Column 
+            field="Enabled" 
+            cell={BooleanCell} 
+            width="100px"
           />
-        <Column 
-          field="Enabled" 
-          cell={BooleanCell} 
-          width="100px"
-        />
-        <Column cell={MyEditCommandCell} width="70px" />
-      </Grid>
+          <Column cell={MyEditCommandCell} width="70px" />
+        </Grid>
+      }
 
       {openForm && (
         <EditForm

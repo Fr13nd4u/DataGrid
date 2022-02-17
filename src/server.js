@@ -10,6 +10,6 @@ createServer({
       return {
         users
       }
-    })
+    }, {timing: 1000})
   },
 })

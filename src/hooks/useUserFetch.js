@@ -15,7 +15,7 @@ export const useGetFetch = () => {
     error
   } = useSelector(state => state.user);
 
-  return {
+  return { 
     data,
     isFetching,
     error
