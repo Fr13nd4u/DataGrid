@@ -25,3 +25,9 @@ h2 {
 .text-no {
   background: rgb(243, 23, 0, 0.32);
 }
+
+.k-dialog-buttongroup {
+  border: none;
+  padding: 0;
+  padding-bottom: 20px;
+}

@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
+import { Form, Field, FormElement } from "@progress/kendo-react-form";
+import { Checkbox, Input, } from "@progress/kendo-react-inputs";
+import { useAddUser } from '../../hooks/useUserFetch';
 
 const AddUser = () => {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
+  const PostUser = useAddUser
+
+  const handleSubmit = (dataItem) => { 
+    PostUser({
+      UserName: dataItem.UserName,
+      FullName: `${dataItem.FirstName} ${dataItem.LastName}`,
+      LastLogin: new Date(),
+      Enabled: dataItem.Enabled
+    })
+    console.log({
+      UserName: dataItem.UserName,
+      FullName: `${dataItem.FirstName} ${dataItem.LastName}`,
+      LastLogin: new Date(),
+      Enabled: dataItem.Enabled
+    })
+    setVisible(false)
+  }
 
   const toggleDialog = () => {
     setVisible(!visible);
@@ -20,30 +40,70 @@ const AddUser = () => {
       >
         New User
       </button>
+
       {visible && (
-        <Dialog title={"Please confirm"} onClose={toggleDialog}>
-          <p
-            style={{
-              margin: "25px",
-              textAlign: "center",
-            }}
-          >
-            Are you sure you want to continue?
-          </p>
-          <DialogActionsBar>
-            <button
-              className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base"
-              onClick={toggleDialog}
-            >
-              No
-            </button>
-            <button
-              className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base"
-              onClick={toggleDialog}
-            >
-              Yes
-            </button>
-          </DialogActionsBar>
+        <Dialog title={"Add new user"} onClose={toggleDialog}>
+          <Form
+            onSubmit={handleSubmit}
+            render={(formRenderProps) => (
+              <FormElement
+                style={{
+                  width: 400,
+                }}
+              >
+                <fieldset className={"k-form-fieldset"}>
+                  <div style={{marginTop: '20px'}}>
+                    <Field
+                      name={"UserName"}
+                      component={Input}
+                      label={"User Name"}
+                    />
+                  </div>
+                  <div style={{marginTop: '20px'}}>
+                    <Field
+                      name={"FirstName"}
+                      component={Input}
+                      label={"First Name"}
+                    />
+                  </div>
+                  <div style={{marginTop: '20px'}}>
+                    <Field
+                      name={"LastName "}
+                      component={Input}
+                      label={"Last Name"}
+                    />
+                  </div>
+                  {/* <div style={{marginTop: '20px'}}>
+                    <Field
+                      name={"LastLogin"}
+                      component={DatePicker}
+                      label={"Last Login"}
+                    />
+                  </div> */}
+                  <div style={{marginTop: '20px'}}>
+                    <Field
+                      name={"Enabled"}
+                      component={Checkbox}
+                      label={"Enabled"}
+                    />
+                  </div>
+                </fieldset>
+                
+              <DialogActionsBar>
+                <div className="k-form-buttons">
+                  <button
+                    type={"submit"}
+                    className="k-button k-button-md k-rounded-md k-button-solid"
+                    style={{width: '100%'}}
+                    disabled={!formRenderProps.allowSubmit}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </DialogActionsBar>
+              </FormElement>
+            )}
+          />
         </Dialog>
       )}
     </>

@@ -22,3 +22,13 @@ export const useGetFetch = () => {
   }
 }
 
+export const useAddUser = (userObj) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(userActions.postUser())
+  }, [dispatch]);
+
+  return dispatch(userActions.postUser(userObj))
+}
+

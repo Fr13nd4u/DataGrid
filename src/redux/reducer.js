@@ -33,7 +33,21 @@ export const userReducer = (state = initialState, {type, payload}) => {
         data: payload,
         error: null,
       };
-  
+
+      case types.ADD_USER_SUCCESS:
+        return {
+          ...state,
+          data: payload,
+          error: null,
+        };
+
+      case types.ADD_USER_FAILURE:
+        return {
+          ...state,
+          error: payload,
+          data: null,
+        };
+
     default:
       return state
   }

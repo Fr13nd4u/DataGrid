@@ -33,7 +33,7 @@ const EditForm = (props) => {
               </div>
               <div style={{marginTop: '20px'}}>
                 <Field
-                  name={"formatLastLogin"}
+                  name={"LastLogin"}
                   component={DatePicker}
                   label={"Last Login"}
                 />

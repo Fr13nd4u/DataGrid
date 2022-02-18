@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { filterBy,orderBy } from "@progress/kendo-data-query";
 import { useNavigate } from "react-router-dom";
@@ -44,21 +44,16 @@ const Table = () => {
   const [page, setPage] = useState(initialDataState);
   const [sort, setSort] = useState(initialSort);
   const navigate = useNavigate();
-  const [users, setUsers] = useState(null)
-
-  useEffect(() => {
-    setUsers(data)
-  }, [data]);
 
   if (error) {
     return <div className="container"><p>Something went wrong!</p></div>;
   }
   
-  if (!users || isFetching) {
+  if (!data || isFetching) {
     return <div className="container"><p>Loading profile...</p></div>;
   }
 
-  const formatUsers = users.users.map(current => {
+  const formatUsers = data.users.map(current => {
     let newUsers = Object.assign({}, current);
     newUsers.formatLastLogin = new Date(current.LastLogin)
     return newUsers
@@ -72,7 +67,7 @@ const Table = () => {
     <div className="container">
       <AddUser />
       <Grid
-        data={filterBy(orderBy(formatUsers.slice(page.skip, page.take + page.skip), sort),filter)}
+        data={!!data?.users ? filterBy(orderBy(data.users.slice(page.skip, page.take + page.skip), sort),filter) : []}
         filterable={true}
         pageable={true}
         sortable={true}
@@ -90,7 +85,7 @@ const Table = () => {
         <Column field="UserName" title="User Name" width="300px" />
         <Column field="FullName" title="Full Name" filterable={false} />
         <Column
-          field="formatLastLogin"
+          field="LastLogin"
           title="Last Login"
           filter="date"
           format="{0:D}"

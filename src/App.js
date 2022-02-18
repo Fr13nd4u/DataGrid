@@ -22,7 +22,7 @@ import './App.css';
 
 const App = () =>  {
   return (
-    <Provider store = {store}>
+    <Provider store={store}>
       <BrowserRouter>
         <Header />
         <Routes>

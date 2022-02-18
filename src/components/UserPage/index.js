@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { useParams } from "react-router-dom";
 
@@ -21,41 +21,25 @@ const EditCommandCell = (props) => {
 const UserPage = () => {
   const { data } = useGetFetch();
   const params = useParams();
-  const [users, setUsers] = useState(null);
 
-  useEffect(() => {
-    setUsers(data)
-    setDataItem(formatUser)
-  }, [data, users]); // eslint-disable-line 
-  
-  const userItem = [users?.users.find(item => item.UserID == params.id)] // eslint-disable-line 
-  
-  const formatUser = users && userItem.map(current => {
-    let newUsers = Object.assign({}, current);
-    newUsers.formatLastLogin = new Date(current.LastLogin)
-    return newUsers
-  })
+  const userItem = [data?.users.find(item => item.UserID == params.id)] // eslint-disable-line 
 
-  const [dataItem, setDataItem] = useState(formatUser);
+  // const [dataItem, setDataItem] = useState(userItem);
   const [openForm, setOpenForm] = useState(false);
   const [editItem, setEditItem] = useState({
     UserID: 1,
   });
-  
+
   const enterEdit = (item) => {
     setOpenForm(true);
     setEditItem(item);
   };
 
   const handleSubmit = (event) => {
-    let newData = dataItem.map((item) => {
-      if (event.UserID === item.UserID) {
-        item = { ...event };
-      }
+    console.log(event);
+    // тут будет хук edit
 
-      return item;
-    });
-    setDataItem(newData);
+    // setDataItem(newData);
     setOpenForm(false);
   };
 
@@ -77,18 +61,18 @@ const UserPage = () => {
 
   return (
     <div className="container">
-      { !users ? 
+      { !data ? 
         <p>Loading profile...</p>
         :
         <Grid
-          data={dataItem} 
+          data={!!data?.users ? userItem : []} 
           editField="inEdit"
         >
           <Column field="UserID" title="ID" width="100px" editable={false} />
           <Column field="UserName" title="User Name" width="300px" />
           <Column field="FullName" title="Full Name" />
           <Column
-            field="formatLastLogin"
+            field="LastLogin"
             title="Last Login"
             format="{0:D}"
             />

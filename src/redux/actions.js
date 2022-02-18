@@ -27,6 +27,19 @@ export const userActions = Object.freeze({
       payload: error
     }
   },
+  addUserSuccess: (payload) => {
+    return {
+      type: types.ADD_USER_SUCCESS,
+      payload
+    }
+  },
+  addUserFailure: (error) => {
+    return {
+      type: types.ADD_USER_FAILURE,
+      error: true,
+      payload: error
+    }
+  },
 
   // Async
   getAsync: () => async(dispatch) => {
@@ -34,22 +47,29 @@ export const userActions = Object.freeze({
 
     await axios.get('/api/users')
     .then(res => {
-      dispatch(userActions.fill(res.data));
+      dispatch(userActions.fill({users: res.data.users.map((item) => ({
+        ...item,
+        LastLogin: new Date(item.LastLogin)
+      }))}));
     })
     .catch(error => {
-      console.log(error);
       dispatch(userActions.setFetchingError(error.response))
     })
 
     dispatch(userActions.stopFetching());
   },
 
-  // postAsync: () => async(dispatch) => {
-  //   dispatch(userActions.startFetching());
-
-  //   await axios.post('/api/users')
-
-  // },
+  postUser: (userObj) => {
+    return (dispatch) => {
+      axios.post('/api/users', {userObj})
+      .then(response => {
+        dispatch(userActions.addUserSuccess(response.data))
+      })
+      .catch(error => {
+        dispatch(userActions.addUserFailure(error))
+      })
+    }
+  },
 
   // editAsync: () => async(dispatch) => {
   //   dispatch(userActions.startFetching());
