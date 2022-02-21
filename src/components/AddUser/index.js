@@ -5,23 +5,16 @@ import { Checkbox, Input, } from "@progress/kendo-react-inputs";
 import { useAddUser } from '../../hooks/useUserFetch';
 
 const AddUser = () => {
+  const PostUser = useAddUser();
   const [visible, setVisible] = useState(false);
-  const PostUser = useAddUser
 
   const handleSubmit = (dataItem) => { 
     PostUser({
       UserName: dataItem.UserName,
       FullName: `${dataItem.FirstName} ${dataItem.LastName}`,
-      LastLogin: new Date(),
       Enabled: dataItem.Enabled
-    })
-    console.log({
-      UserName: dataItem.UserName,
-      FullName: `${dataItem.FirstName} ${dataItem.LastName}`,
-      LastLogin: new Date(),
-      Enabled: dataItem.Enabled
-    })
-    setVisible(false)
+    });
+    setVisible(false);
   }
 
   const toggleDialog = () => {
@@ -68,18 +61,11 @@ const AddUser = () => {
                   </div>
                   <div style={{marginTop: '20px'}}>
                     <Field
-                      name={"LastName "}
+                      name={"LastName"}
                       component={Input}
                       label={"Last Name"}
                     />
                   </div>
-                  {/* <div style={{marginTop: '20px'}}>
-                    <Field
-                      name={"LastLogin"}
-                      component={DatePicker}
-                      label={"Last Login"}
-                    />
-                  </div> */}
                   <div style={{marginTop: '20px'}}>
                     <Field
                       name={"Enabled"}

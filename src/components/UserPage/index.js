@@ -53,7 +53,7 @@ const UserPage = () => {
 
   const BooleanCell = (props) => {
     return (
-      <td className={props.dataItem[props.field] ? 'text-yes' : 'text-no'}>
+      <td className={!!props.dataItem[props.field] ? 'text-yes' : 'text-no'}>
         {props.dataItem[props.field] ? 'Yes' : 'No'}
       </td>
     )

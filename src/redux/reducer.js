@@ -34,19 +34,18 @@ export const userReducer = (state = initialState, {type, payload}) => {
         error: null,
       };
 
-      case types.ADD_USER_SUCCESS:
-        return {
-          ...state,
-          data: payload,
-          error: null,
-        };
+    case types.ADD_USER_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        data: null,
+      };
 
-      case types.ADD_USER_FAILURE:
-        return {
-          ...state,
-          error: payload,
-          data: null,
-        };
+    case types.ADD_USER_SUCCESS:
+      return {
+        data: {users: [...state.data.users, {...payload.users}]},
+        error: null,
+      };
 
     default:
       return state

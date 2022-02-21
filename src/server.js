@@ -12,13 +12,14 @@ createServer({
         users
       }
     }, {timing: 1000}); // Using to slow down the response
-
+    
     // Responding to a POST request
-    this.post("/movies", (schema, request) => {
+    this.post("/users/post", (schema, request) => {
       let attrs = JSON.parse(request.requestBody)
-      attrs.id = Date.now()
+      attrs.userObj.UserID = Date.now();
+      attrs.userObj.LastLogin = new Date();
 
-      return { movie: attrs }
+      return { users: attrs.userObj }
     });
 
   }

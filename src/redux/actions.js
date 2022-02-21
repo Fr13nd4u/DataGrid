@@ -46,8 +46,8 @@ export const userActions = Object.freeze({
     dispatch(userActions.startFetching());
 
     await axios.get('/api/users')
-    .then(res => {
-      dispatch(userActions.fill({users: res.data.users.map((item) => ({
+    .then(response => {
+      dispatch(userActions.fill({users: response.data.users.map((item) => ({
         ...item,
         LastLogin: new Date(item.LastLogin)
       }))}));
@@ -59,16 +59,14 @@ export const userActions = Object.freeze({
     dispatch(userActions.stopFetching());
   },
 
-  postUser: (userObj) => {
-    return (dispatch) => {
-      axios.post('/api/users', {userObj})
-      .then(response => {
-        dispatch(userActions.addUserSuccess(response.data))
-      })
-      .catch(error => {
-        dispatch(userActions.addUserFailure(error))
-      })
-    }
+  postUser: () => (dispatch) => (userObj) => {
+    axios.post('/api/users/post', {userObj})
+    .then(response => {
+      dispatch(userActions.addUserSuccess({users: {...response.data.users, LastLogin: new Date(response.data.users.LastLogin)}}));
+    })
+    .catch(error => {
+      dispatch(userActions.addUserFailure(error))
+    })
   },
 
   // editAsync: () => async(dispatch) => {

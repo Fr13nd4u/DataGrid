@@ -53,12 +53,6 @@ const Table = () => {
     return <div className="container"><p>Loading profile...</p></div>;
   }
 
-  const formatUsers = data.users.map(current => {
-    let newUsers = Object.assign({}, current);
-    newUsers.formatLastLogin = new Date(current.LastLogin)
-    return newUsers
-  })
-
   const pageChange = (event) => {
     setPage(event.page);
   };
@@ -71,7 +65,7 @@ const Table = () => {
         filterable={true}
         pageable={true}
         sortable={true}
-        total={formatUsers.length}
+        total={data?.users?.length}
         skip={page.skip}
         take={page.take}
         filter={filter}
