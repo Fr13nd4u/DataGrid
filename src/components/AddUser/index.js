@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux'
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { Form, Field, FormElement } from "@progress/kendo-react-form";
 import { Checkbox, Input, } from "@progress/kendo-react-inputs";
+
+import UserNameInput from '../Inputs/UserNameInput';
 import { useAddUser } from '../../hooks/useUserFetch';
+import { userNameValidator } from '../../hooks/useValidators';
 
 const AddUser = () => {
   const PostUser = useAddUser();
   const [visible, setVisible] = useState(false);
+  const { data } = useSelector((state) => state.user)
+
 
   const handleSubmit = (dataItem) => { 
     PostUser({
@@ -41,15 +47,16 @@ const AddUser = () => {
             render={(formRenderProps) => (
               <FormElement
                 style={{
-                  width: 400,
+                  width: 450,
                 }}
               >
                 <fieldset className={"k-form-fieldset"}>
                   <div style={{marginTop: '20px'}}>
                     <Field
                       name={"UserName"}
-                      component={Input}
+                      component={UserNameInput}
                       label={"User Name"}
+                      validator={(_) => userNameValidator(_ , data)}
                     />
                   </div>
                   <div style={{marginTop: '20px'}}>

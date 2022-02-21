@@ -13,7 +13,7 @@ const EditForm = (props) => {
         render={(formRenderProps) => (
           <FormElement
             style={{
-              maxWidth: 650,
+              width: 450,
             }}
           >
             <fieldset className={"k-form-fieldset"}>
